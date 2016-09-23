@@ -1,7 +1,7 @@
 {
   "name": "taisiya/core-bundle",
   "license": "MIT",
-  "type": "project",
+  "type": "taisiya-bundle",
   "description": "The \"Core Bundle\".",
   "minimum-stability": "dev",
   "prefer-stable": true,
