@@ -1,0 +1,21 @@
+{
+  "name": "taisiya/core-bundle",
+  "license": "MIT",
+  "type": "project",
+  "description": "The \"Core Bundle\".",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Taisiya\\CoreBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Taisiya\\Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=7.1"
+  }
+}
