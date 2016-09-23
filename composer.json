@@ -20,5 +20,8 @@
     "pimple/pimple": "^3.0",
     "symfony/finder": "^3.0",
     "slim/slim": "^3.0"
+  },
+  "require-dev": {
+    "composer/composer": "*"
   }
 }
