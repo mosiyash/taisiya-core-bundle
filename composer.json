@@ -17,6 +17,7 @@
   },
   "require": {
     "php": ">=7.1",
-    "vlucas/phpdotenv": "^2.4"
+    "vlucas/phpdotenv": "^2.4",
+    "pimple/pimple": "^3.0"
   }
 }
