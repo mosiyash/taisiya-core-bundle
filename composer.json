@@ -17,7 +17,6 @@
   },
   "require": {
     "php": ">=7.1",
-    "vlucas/phpdotenv": "^2.4",
     "pimple/pimple": "^3.0",
     "symfony/finder": "^3.0",
     "slim/slim": "^3.0"
