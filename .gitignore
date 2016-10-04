@@ -1,2 +1,6 @@
+composer.lock
 /.idea
+/phinx.php
+/phinx.yml
+/phinx.json
 /vendor
