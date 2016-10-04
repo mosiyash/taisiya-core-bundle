@@ -24,5 +24,17 @@
   },
   "require-dev": {
     "composer/composer": "*"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::copySettings",
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::mergeSettings",
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::createPhinxConfigFile"
+    ],
+    "post-update-cmd": [
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::copySettings",
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::mergeSettings",
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::createPhinxConfigFile"
+    ]
   }
 }

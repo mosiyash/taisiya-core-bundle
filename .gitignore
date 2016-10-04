@@ -1,6 +1,16 @@
+*.box
+*.env
 composer.lock
+node_modules
+npm-debug.log
 /.idea
+/.vagrant
+/app/config/*.default.php
+!/app/config/settings.default.php
+/app/config/*.local.php
+/app/config/settings.php
+/pimple.json
+/phinx.json
 /phinx.php
 /phinx.yml
-/phinx.json
 /vendor
