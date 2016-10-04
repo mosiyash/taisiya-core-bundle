@@ -6,17 +6,12 @@ use Composer\Script\Event;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+defined('ROOT_DIR') || define('ROOT_DIR', dirname(dirname(__DIR__)));
+
 class ScriptHandler
 {
-    protected static function defineRootDir(): void
-    {
-        defined('ROOT_DIR') || define('ROOT_DIR', dirname(dirname(__DIR__)));
-    }
-
     public static function copySettings(Event $event): void
     {
-        self::defineRootDir();
-
         $finder = new Finder();
         $finder
             ->in([
@@ -41,8 +36,6 @@ class ScriptHandler
 
     public static function mergeSettings(Event $event): void
     {
-        self::defineRootDir();
-
         $uname = php_uname('n');
         $files = [];
 
@@ -98,8 +91,6 @@ class ScriptHandler
 
     public static function createPhinxConfigFile(Event $event): void
     {
-        self::defineRootDir();
-
         $settings = require ROOT_DIR.'/app/config/settings.php';
 
         if (empty($settings['phinx'])) {
