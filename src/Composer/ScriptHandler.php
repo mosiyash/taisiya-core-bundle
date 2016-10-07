@@ -6,7 +6,7 @@ use Composer\Script\Event;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-defined('ROOT_DIR') || define('ROOT_DIR', dirname(dirname(__DIR__)));
+defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', dirname(dirname(__DIR__)));
 
 class ScriptHandler
 {
@@ -15,8 +15,8 @@ class ScriptHandler
         $finder = new Finder();
         $finder
             ->in([
-                ROOT_DIR.'/vendor',
-                ROOT_DIR.'/src',
+                TAISIYA_ROOT.'/vendor',
+                TAISIYA_ROOT.'/src',
             ])
             ->files()
             ->name('/settings\.default\.php$/')
@@ -25,11 +25,11 @@ class ScriptHandler
             });
 
         foreach ($finder as $file) {
-            $dest = preg_replace('/^.+?\/vendor\/(.+?)\/(.+?)\/.+?$/', ROOT_DIR.'/app/config/\1.\2.settings.default.php', $file->getPathname());
+            $dest = preg_replace('/^.+?\/vendor\/(.+?)\/(.+?)\/.+?$/', TAISIYA_ROOT.'/app/config/\1.\2.settings.default.php', $file->getPathname());
             if (!copy($file->getPathname(), $dest)) {
-                $event->getIO()->writeError('  - <error>Couldn\'t copy '.str_replace(ROOT_DIR.'/', '', $file->getPathname()).' to '.str_replace(ROOT_DIR.'/', '', $dest).'</error>');
+                $event->getIO()->writeError('  - <error>Couldn\'t copy '.str_replace(TAISIYA_ROOT.'/', '', $file->getPathname()).' to '.str_replace(TAISIYA_ROOT.'/', '', $dest).'</error>');
             } else {
-                $event->getIO()->write('  - <info>'.str_replace(ROOT_DIR.'/', '', $file->getPathname()).' is copied to '.str_replace(ROOT_DIR.'/', '', $dest).'</info>');
+                $event->getIO()->write('  - <info>'.str_replace(TAISIYA_ROOT.'/', '', $file->getPathname()).' is copied to '.str_replace(TAISIYA_ROOT.'/', '', $dest).'</info>');
             }
         }
     }
@@ -41,7 +41,7 @@ class ScriptHandler
 
         $finder = new Finder();
         $finder
-            ->in(ROOT_DIR.'/app/config')
+            ->in(TAISIYA_ROOT.'/app/config')
             ->files()
             ->name('/\.settings\.default\.php$/');
 
@@ -51,7 +51,7 @@ class ScriptHandler
 
         $finder = new Finder();
         $finder
-            ->in(ROOT_DIR.'/app/config')
+            ->in(TAISIYA_ROOT.'/app/config')
             ->files()
             ->name('/\.settings\.local\.php$/');
 
@@ -61,7 +61,7 @@ class ScriptHandler
 
         $finder = new Finder();
         $finder
-            ->in(ROOT_DIR.'/app/config')
+            ->in(TAISIYA_ROOT.'/app/config')
             ->files()
             ->name('/\.settings\.'.preg_quote($uname, '/').'\.local\.php$/');
 
@@ -69,12 +69,12 @@ class ScriptHandler
             $files[] = $file->getPathname();
         }
 
-        $files[] = ROOT_DIR.'/app/config/settings.default.php';
-        if (file_exists(ROOT_DIR.'/app/config/settings.local.php')) {
-            $files[] = ROOT_DIR.'/app/config/settings.local.php';
+        $files[] = TAISIYA_ROOT.'/app/config/settings.default.php';
+        if (file_exists(TAISIYA_ROOT.'/app/config/settings.local.php')) {
+            $files[] = TAISIYA_ROOT.'/app/config/settings.local.php';
         }
-        if (file_exists(ROOT_DIR.'/app/config/settings.'.$uname.'.local.php')) {
-            $files[] = ROOT_DIR.'/app/config/settings.'.$uname.'.local.php';
+        if (file_exists(TAISIYA_ROOT.'/app/config/settings.'.$uname.'.local.php')) {
+            $files[] = TAISIYA_ROOT.'/app/config/settings.'.$uname.'.local.php';
         }
 
         $settings = [];
@@ -82,7 +82,7 @@ class ScriptHandler
             $settings = array_merge_recursive($settings, require $file);
         }
 
-        if (!file_put_contents(ROOT_DIR.'/app/config/settings.php', "<?php\n\nreturn ".var_export($settings, true).";\n")) {
+        if (!file_put_contents(TAISIYA_ROOT.'/app/config/settings.php', "<?php\n\nreturn ".var_export($settings, true).";\n")) {
             $event->getIO()->writeError('  - <error>couldn\'t write app/config/settings.php</error>');
         } else {
             $event->getIO()->write('  - <info>writed to app/config/settings.php</info>');
@@ -91,14 +91,14 @@ class ScriptHandler
 
     public static function createPhinxConfigFile(Event $event): void
     {
-        $settings = require ROOT_DIR.'/app/config/settings.php';
+        $settings = require TAISIYA_ROOT.'/app/config/settings.php';
 
         if (empty($settings['phinx'])) {
             $event->getIO()->writeError('  - <error>phinx configuration is empty</error>');
-        } elseif (!file_put_contents(ROOT_DIR.'/phinx.php', "<?php\n\nreturn ".var_export($settings['phinx'], true).";\n")) {
-            $event->getIO()->writeError('  - <error>couldn\'t write a file: '.ROOT_DIR.'/phinx.php</error>');
+        } elseif (!file_put_contents(TAISIYA_ROOT.'/phinx.php', "<?php\n\nreturn ".var_export($settings['phinx'], true).";\n")) {
+            $event->getIO()->writeError('  - <error>couldn\'t write a file: '.TAISIYA_ROOT.'/phinx.php</error>');
         } else {
-            $event->getIO()->write('  - <info>writed to '.ROOT_DIR.'/phinx.php</info>');
+            $event->getIO()->write('  - <info>writed to '.TAISIYA_ROOT.'/phinx.php</info>');
         }
     }
 }
