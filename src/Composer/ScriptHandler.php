@@ -10,6 +10,9 @@ defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', dirname(dirname(__DIR__)));
 
 class ScriptHandler
 {
+    /**
+     * @param Event $event
+     */
     public static function copySettings(Event $event): void
     {
         $finder = new Finder();
@@ -34,6 +37,9 @@ class ScriptHandler
         }
     }
 
+    /**
+     * @param Event $event
+     */
     public static function mergeSettings(Event $event): void
     {
         $uname = php_uname('n');
@@ -89,6 +95,9 @@ class ScriptHandler
         }
     }
 
+    /**
+     * @param Event $event
+     */
     public static function createPhinxConfigFile(Event $event): void
     {
         $settings = require TAISIYA_ROOT.'/app/config/settings.php';
