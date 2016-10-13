@@ -2,7 +2,8 @@
 
 namespace Taisiya\CoreBundle\Composer;
 
-use Composer\Script\Event;
+use Composer\EventDispatcher\Event;
+use Slim\App;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -10,6 +11,24 @@ defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', dirname(dirname(__DIR__)));
 
 class ScriptHandler
 {
+    const EVENT_DEFAULT_COMMAND = 'default_command';
+
+    /**
+     * @param Event $event
+     */
+    public static function defaultCommand(Event $event): void
+    {
+        $app = file_exists(TAISIYA_ROOT.'/bootstrap.php')
+            ? require_once TAISIYA_ROOT.'/bootstrap.php':
+            new App();
+
+        $dispatcher = $event->getComposer()->getEventDispatcher();
+
+        $defaultCommandEvent = new Event(self::EVENT_DEFAULT_COMMAND, ['app' => $app]);
+
+        $dispatcher->dispatch(self::EVENT_DEFAULT_COMMAND, $defaultCommandEvent);
+    }
+
     /**
      * @param Event $event
      */
