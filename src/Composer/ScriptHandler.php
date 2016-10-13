@@ -26,6 +26,39 @@ class ScriptHandler
 
         $defaultCommandEvent = new Event(self::EVENT_DEFAULT_COMMAND, ['app' => $app]);
 
+        $finder = (new Finder())
+            ->in([TAISIYA_ROOT.'/vendor', TAISIYA_ROOT.'/src'])
+            ->name('Subscriber.php');
+
+        foreach ($finder as $file) {
+//            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+//
+//            $stmts = $parser->parse(file_get_contents($file->getPathname()));
+//            if ($stmts === null) {
+//                continue;
+//            }
+//
+//            /** @var Namespace_ $namespace */
+//            $namespace = self::findNodeByInstanceType($stmts, Namespace_::class);
+//            if ($namespace === null) {
+//                continue;
+//            }
+//
+//            /** @var Node\Stmt\Class_ $class */
+//            $class = self::findNodeByInstanceType($namespace->stmts, Node\Stmt\Class_::class);
+//            if ($class->name !== 'BuildPropelSchemaSubscriber' || $class->isAbstract()) {
+//                continue;
+//            }
+//
+//            $fullClassName = implode('\\', $namespace->name->parts).'\\'.$class->name;
+//            $dispatcher->addSubscriber(new $fullClassName());
+//
+//            $event->getIO()->write('  - added subscriber <info>'.$fullClassName.'</info>');
+
+            $reflectionClass = new \ReflectionClass($file->getPathname());
+            exit(var_dump($reflectionClass));
+        }
+
         $dispatcher->dispatch(self::EVENT_DEFAULT_COMMAND, $defaultCommandEvent);
     }
 
