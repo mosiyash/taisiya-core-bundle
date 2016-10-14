@@ -5,6 +5,7 @@ namespace Taisiya\CoreBundle\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
+use Taisiya\CoreBundle\Composer\Event\EventSubscriberInterface;
 use Taisiya\CoreBundle\Console\Style\TaisiyaStyle;
 use Taisiya\CoreBundle\Exception\InvalidArgumentException;
 use Taisiya\CoreBundle\Exception\NotReadableException;
@@ -23,11 +24,47 @@ class RebuildCacheCommand extends Command
     {
         $io = new TaisiyaStyle($input, $output);
 
+        $this->rebuildComposerSubscribersCache($io);
         $this->rebuildBundlesCache($io);
         $this->rebuildCommandsCache($io);
     }
 
-    final protected function rebuildBundlesCache(TaisiyaStyle $io)
+    /**
+     * @param TaisiyaStyle $io
+     */
+    final protected function rebuildComposerSubscribersCache(TaisiyaStyle $io): void
+    {
+        $io->isVerbose() && $io->writeln('Rebuild Composer subscribers cache');
+
+        $subscribers = [];
+
+        $finder = Finder::create()
+            ->in(TAISIYA_ROOT)
+            ->path('/(src|vendor)/')
+            ->files()
+            ->name('*Subscriber.php');
+
+        foreach ($finder as $k => $file) {
+            $subscriberClass = $this->extractClassNameFromFile($file->getPathname());
+            try {
+                $reflectionClass = new \ReflectionClass($subscriberClass);
+            } catch (\ReflectionException $e) {
+                continue;
+            }
+            if (!$reflectionClass->isAbstract() && $reflectionClass->isSubclassOf(EventSubscriberInterface::class)) {
+                $io->isVerbose() && $io->writeln('  + '.$subscriberClass);
+                $subscribers[] = $subscriberClass;
+            }
+        }
+
+        $this->putDataToCacheFile('composer_subscribers.cache.php', $subscribers);
+        $io->isVerbose() && $io->writeln('  Subscribers saved to <info>composer_subscribers.cache.php</info>');
+    }
+
+    /**
+     * @param TaisiyaStyle $io
+     */
+    final protected function rebuildBundlesCache(TaisiyaStyle $io): void
     {
         $io->isVerbose() && $io->writeln('Rebuild bundles cache');
 
@@ -52,7 +89,10 @@ class RebuildCacheCommand extends Command
         $io->isVerbose() && $io->writeln('  Bundles saved to <info>bundles.cache.php</info>');
     }
 
-    final protected function rebuildCommandsCache(TaisiyaStyle $io)
+    /**
+     * @param TaisiyaStyle $io
+     */
+    final protected function rebuildCommandsCache(TaisiyaStyle $io): void
     {
         $io->isVerbose() && $io->writeln('Rebuild commands cache');
 
@@ -81,6 +121,11 @@ class RebuildCacheCommand extends Command
         $io->isVerbose() && $io->writeln('  Commands saved to <info>commands.cache.php</info>');
     }
 
+    /**
+     * @param string $filepath
+     * @throws RuntimeException
+     * @return string
+     */
     final protected function extractClassNameFromFile(string $filepath): string
     {
         $contents = $this->getFileContents($filepath);
