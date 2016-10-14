@@ -25,7 +25,5 @@ final class DefaultCommandSubscriber implements DefaultCommandSubscriberInterfac
     {
         /** @var App $app */
         $app = $event->getArguments()['app'];
-
-
     }
 }
