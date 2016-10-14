@@ -16,6 +16,5 @@ final class App extends \Slim\App
 
     final private function connectBundles(): void
     {
-
     }
 }

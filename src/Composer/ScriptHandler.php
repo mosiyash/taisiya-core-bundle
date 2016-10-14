@@ -31,7 +31,7 @@ class ScriptHandler
             ->name('*Subscriber.php');
 
         foreach ($finder as $file) {
-//            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+            //            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 //
 //            $stmts = $parser->parse(file_get_contents($file->getPathname()));
 //            if ($stmts === null) {
@@ -54,8 +54,6 @@ class ScriptHandler
 //            $dispatcher->addSubscriber(new $fullClassName());
 //
 //            $event->getIO()->write('  - added subscriber <info>'.$fullClassName.'</info>');
-
-
         }
 
         $dispatcher->dispatch(self::EVENT_DEFAULT_COMMAND, $defaultCommandEvent);

@@ -6,5 +6,4 @@ use Composer\EventDispatcher\EventSubscriberInterface;
 
 interface DefaultCommandSubscriberInterface extends EventSubscriberInterface
 {
-
 }

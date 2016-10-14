@@ -8,7 +8,7 @@ use Symfony\CS\Finder;
 $finder = Finder::create()
     ->files()
     ->in('src')
-    ->in('tests')
+//    ->in('tests')
     ->name('*.php');
 
 return Config::create()
