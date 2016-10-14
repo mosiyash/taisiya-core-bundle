@@ -27,7 +27,7 @@ class RebuildCacheCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function execute(InputInterface $input, OutputInterface $output):
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new TaisiyaStyle($input, $output);
 
