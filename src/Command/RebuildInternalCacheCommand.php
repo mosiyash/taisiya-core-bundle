@@ -12,14 +12,14 @@ use Taisiya\CoreBundle\Exception\NotReadableException;
 use Taisiya\CoreBundle\Exception\RuntimeException;
 use Taisiya\CoreBundle\Provider\ServiceProvider;
 
-class RebuildCacheCommand extends Command
+class RebuildInternalCacheCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('cache:rebuild')
+        $this->setName('cache:internal-rebuild')
             ->setDescription('Rebuild internal application cache');
     }
 
