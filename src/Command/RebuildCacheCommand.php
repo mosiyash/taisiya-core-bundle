@@ -23,7 +23,13 @@ class RebuildCacheCommand extends Command
     {
         $io = new TaisiyaStyle($input, $output);
 
-        $io->section('Search bundles');
+        $this->rebuildBundlesCache($io);
+        $this->rebuildCommandsCache($io);
+    }
+
+    final protected function rebuildBundlesCache(TaisiyaStyle $io)
+    {
+        $io->isVerbose() && $io->writeln('Rebuild bundles cache');
 
         $bundles = [];
 
@@ -37,12 +43,42 @@ class RebuildCacheCommand extends Command
             $bundleServiceProvider = $this->extractClassNameFromFile($file->getPathname());
             $reflectionClass = new \ReflectionClass($bundleServiceProvider);
             if (!$reflectionClass->isAbstract() && $reflectionClass->isSubclassOf(ServiceProvider::class)) {
-                $output->isVerbose() && $output->write('  + '.$bundleServiceProvider);
+                $io->isVerbose() && $io->writeln('  + '.$bundleServiceProvider);
                 $bundles[] = $bundleServiceProvider;
             }
         }
 
-        $this->putDataToCacheFile('bundles_providers.cached.php', $bundles);
+        $this->putDataToCacheFile('bundles.cache.php', $bundles);
+        $io->isVerbose() && $io->writeln('  Bundles saved to <info>bundles.cache.php</info>');
+    }
+
+    final protected function rebuildCommandsCache(TaisiyaStyle $io)
+    {
+        $io->isVerbose() && $io->writeln('Rebuild commands cache');
+
+        $commands = [];
+
+        $finder = Finder::create()
+            ->in(TAISIYA_ROOT)
+            ->path('/(src|vendor)/')
+            ->files()
+            ->name('*Command.php');
+
+        foreach ($finder as $k => $file) {
+            $commandClass = $this->extractClassNameFromFile($file->getPathname());
+            try {
+                $reflectionClass = new \ReflectionClass($commandClass);
+            } catch (\ReflectionException $e) {
+                continue;
+            }
+            if (!$reflectionClass->isAbstract() && $reflectionClass->isSubclassOf(Command::class)) {
+                $io->isVerbose() && $io->writeln('  + '.$commandClass);
+                $commands[] = $commandClass;
+            }
+        }
+
+        $this->putDataToCacheFile('commands.cache.php', $commands);
+        $io->isVerbose() && $io->writeln('  Commands saved to <info>commands.cache.php</info>');
     }
 
     final protected function extractClassNameFromFile(string $filepath): string
