@@ -1,6 +1,6 @@
 <?php
 
-use Slim\App;
+use Taisiya\CoreBundle\App;
 
 defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', __DIR__);
 

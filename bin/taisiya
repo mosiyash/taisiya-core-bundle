@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+use Taisiya\CoreBundle\App;
+use Taisiya\CoreBundle\Console;
+
+defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', dirname(__DIR__));
+
+require TAISIYA_ROOT.'/vendor/autoload.php';
+
+$app = new App();
+
+$console = new Console($app);
+$console->run();

@@ -3,9 +3,9 @@
 namespace Taisiya\CoreBundle\Composer;
 
 use Composer\EventDispatcher\Event;
-use Slim\App;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Taisiya\CoreBundle\App;
 
 defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', dirname(dirname(__DIR__)));
 
@@ -16,7 +16,7 @@ class ScriptHandler
     /**
      * @param Event $event
      */
-    public static function defaultCommand(Event $event): void
+    final public static function defaultCommand(Event $event): void
     {
         $app = file_exists(TAISIYA_ROOT.'/bootstrap.php')
             ? require_once TAISIYA_ROOT.'/bootstrap.php':
@@ -28,7 +28,7 @@ class ScriptHandler
 
         $finder = (new Finder())
             ->in([TAISIYA_ROOT.'/vendor', TAISIYA_ROOT.'/src'])
-            ->name('Subscriber.php');
+            ->name('*Subscriber.php');
 
         foreach ($finder as $file) {
 //            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
@@ -55,8 +55,7 @@ class ScriptHandler
 //
 //            $event->getIO()->write('  - added subscriber <info>'.$fullClassName.'</info>');
 
-            $reflectionClass = new \ReflectionClass($file->getPathname());
-            exit(var_dump($reflectionClass));
+
         }
 
         $dispatcher->dispatch(self::EVENT_DEFAULT_COMMAND, $defaultCommandEvent);

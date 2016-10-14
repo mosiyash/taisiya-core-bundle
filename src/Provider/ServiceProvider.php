@@ -6,7 +6,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Slim\App;
 
-class CoreServiceProvider implements ServiceProviderInterface
+abstract class ServiceProvider implements ServiceProviderInterface
 {
     /**
      * @var App
