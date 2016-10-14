@@ -1,6 +1,6 @@
 <?php
 
-namespace Taisiya\CoreBundle\Console\Command;
+namespace Taisiya\CoreBundle\Console\Command\Cache;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,14 +13,14 @@ use Taisiya\CoreBundle\Exception\NotReadableException;
 use Taisiya\CoreBundle\Exception\RuntimeException;
 use Taisiya\CoreBundle\Provider\ServiceProvider;
 
-class RebuildInternalCacheCommand extends Command
+final class RebuildInternalCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('cache:internal-rebuild')
+        $this->setName('cache:rebuild-internal')
             ->setDescription('Rebuild internal application cache');
     }
 

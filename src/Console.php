@@ -3,7 +3,8 @@
 namespace Taisiya\CoreBundle;
 
 use Symfony\Component\Console\Application;
-use Taisiya\CoreBundle\Console\Command\RebuildInternalCacheCommand;
+use Taisiya\CoreBundle\Console\Command\Cache\RebuildInternalCommand;
+use Taisiya\CoreBundle\Console\Command\Config\RebuildSettingsCommand;
 
 final class Console extends Application
 {
@@ -32,7 +33,8 @@ final class Console extends Application
     public function getDefaultCommands()
     {
         $commands = [
-            new RebuildInternalCacheCommand($this->app),
+            new RebuildInternalCommand($this->app),
+            new RebuildSettingsCommand($this->app),
         ];
 
         return array_merge(parent::getDefaultCommands(), $commands);
