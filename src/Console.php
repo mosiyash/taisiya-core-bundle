@@ -3,7 +3,7 @@
 namespace Taisiya\CoreBundle;
 
 use Symfony\Component\Console\Application;
-use Taisiya\CoreBundle\Command\RebuildInternalCacheCommand;
+use Taisiya\CoreBundle\Console\Command\RebuildInternalCacheCommand;
 
 final class Console extends Application
 {

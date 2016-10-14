@@ -1,6 +1,6 @@
 <?php
 
-namespace Taisiya\CoreBundle\Command;
+namespace Taisiya\CoreBundle\Console\Command;
 
 use Taisiya\CoreBundle\App;
 

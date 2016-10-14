@@ -3,9 +3,11 @@
 namespace Taisiya\CoreBundle\Composer;
 
 use Composer\EventDispatcher\Event;
+use Composer\EventDispatcher\EventDispatcher;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Taisiya\CoreBundle\App;
+use Taisiya\CoreBundle\Composer\Event\DefaultCommandSubscriberInterface;
 
 defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', dirname(dirname(__DIR__)));
 
@@ -22,41 +24,28 @@ class ScriptHandler
             ? require_once TAISIYA_ROOT.'/bootstrap.php':
             new App();
 
+        /** @var EventDispatcher $dispatcher */
         $dispatcher = $event->getComposer()->getEventDispatcher();
 
         $defaultCommandEvent = new Event(self::EVENT_DEFAULT_COMMAND, ['app' => $app]);
 
-        $finder = (new Finder())
-            ->in([TAISIYA_ROOT.'/vendor', TAISIYA_ROOT.'/src'])
-            ->name('*Subscriber.php');
-
-        foreach ($finder as $file) {
-            //            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-//
-//            $stmts = $parser->parse(file_get_contents($file->getPathname()));
-//            if ($stmts === null) {
-//                continue;
-//            }
-//
-//            /** @var Namespace_ $namespace */
-//            $namespace = self::findNodeByInstanceType($stmts, Namespace_::class);
-//            if ($namespace === null) {
-//                continue;
-//            }
-//
-//            /** @var Node\Stmt\Class_ $class */
-//            $class = self::findNodeByInstanceType($namespace->stmts, Node\Stmt\Class_::class);
-//            if ($class->name !== 'BuildPropelSchemaSubscriber' || $class->isAbstract()) {
-//                continue;
-//            }
-//
-//            $fullClassName = implode('\\', $namespace->name->parts).'\\'.$class->name;
-//            $dispatcher->addSubscriber(new $fullClassName());
-//
-//            $event->getIO()->write('  - added subscriber <info>'.$fullClassName.'</info>');
+        /** @var string $subscriberClass */
+        foreach (self::getComposerSubscribers() as $subscriberClass) {
+            $reflectionClass = new \ReflectionClass($subscriberClass);
+            if ($reflectionClass->isSubclassOf(DefaultCommandSubscriberInterface::class)) {
+                $dispatcher->addSubscriber(new $subscriberClass());
+            }
         }
 
         $dispatcher->dispatch(self::EVENT_DEFAULT_COMMAND, $defaultCommandEvent);
+    }
+
+    /**
+     * @return array
+     */
+    final protected static function getComposerSubscribers(): array
+    {
+        return require_once TAISIYA_ROOT.'/var/cache/composer_subscribers.cache.php';
     }
 
     /**

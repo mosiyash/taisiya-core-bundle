@@ -1,11 +1,12 @@
 <?php
 
-namespace Taisiya\CoreBundle\Command;
+namespace Taisiya\CoreBundle\Console\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Taisiya\CoreBundle\Composer\Event\EventSubscriberInterface;
+use Taisiya\CoreBundle\Console\Command\Command;
 use Taisiya\CoreBundle\Console\Style\TaisiyaStyle;
 use Taisiya\CoreBundle\Exception\InvalidArgumentException;
 use Taisiya\CoreBundle\Exception\NotReadableException;
