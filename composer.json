@@ -24,7 +24,8 @@
     "nikic/php-parser": "^2.1|^3.0",
     "eloquent/pathogen": "^0.6",
     "league/flysystem": "^1.0",
-    "JBZoo/PimpleDumper": "^1.2"
+    "JBZoo/PimpleDumper": "^1.2",
+    "doctrine/inflector": "^1.0"
   },
   "require-dev": {
     "composer/composer": "*",
@@ -33,10 +34,10 @@
   },
   "scripts": {
     "post-install-cmd": [
-      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::defaultCommand"
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::runCommandEvents"
     ],
     "post-update-cmd": [
-      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::defaultCommand"
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::runCommandEvents"
     ]
   }
 }

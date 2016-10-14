@@ -5,9 +5,9 @@ namespace Taisiya\CoreBundle\Console\Command\Cache;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
-use Taisiya\CoreBundle\Composer\Event\EventSubscriberInterface;
 use Taisiya\CoreBundle\Console\Command\Command;
 use Taisiya\CoreBundle\Console\Style\TaisiyaStyle;
+use Taisiya\CoreBundle\Event\EventSubscriberInterface;
 use Taisiya\CoreBundle\Exception\InvalidArgumentException;
 use Taisiya\CoreBundle\Exception\NotReadableException;
 use Taisiya\CoreBundle\Exception\RuntimeException;
@@ -32,7 +32,7 @@ final class RebuildInternalCommand extends Command
     {
         $io = new TaisiyaStyle($input, $output);
 
-        $this->rebuildComposerSubscribersCache($io);
+        $this->rebuildEventsSubscribersCache($io);
         $this->rebuildBundlesCache($io);
         $this->rebuildCommandsCache($io);
     }
@@ -40,11 +40,11 @@ final class RebuildInternalCommand extends Command
     /**
      * @param TaisiyaStyle $io
      */
-    final protected function rebuildComposerSubscribersCache(TaisiyaStyle $io): void
+    final protected function rebuildEventsSubscribersCache(TaisiyaStyle $io): void
     {
-        $io->isVerbose() && $io->writeln('Rebuild Composer subscribers cache');
+        $io->isVerbose() && $io->writeln('Rebuild events subscribers cache');
 
-        $subscribers = [];
+        $bundles = [];
 
         $finder = Finder::create()
             ->in(TAISIYA_ROOT)
@@ -53,20 +53,16 @@ final class RebuildInternalCommand extends Command
             ->name('*Subscriber.php');
 
         foreach ($finder as $k => $file) {
-            $subscriberClass = $this->extractClassNameFromFile($file->getPathname());
-            try {
-                $reflectionClass = new \ReflectionClass($subscriberClass);
-            } catch (\ReflectionException $e) {
-                continue;
-            }
+            $bundleServiceProvider = $this->extractClassNameFromFile($file->getPathname());
+            $reflectionClass = new \ReflectionClass($bundleServiceProvider);
             if (!$reflectionClass->isAbstract() && $reflectionClass->isSubclassOf(EventSubscriberInterface::class)) {
-                $io->isVerbose() && $io->writeln('  + '.$subscriberClass);
-                $subscribers[] = $subscriberClass;
+                $io->isVerbose() && $io->writeln('  + '.$bundleServiceProvider);
+                $bundles[] = $bundleServiceProvider;
             }
         }
 
-        $this->putDataToCacheFile('composer_subscribers.cache.php', $subscribers);
-        $io->isVerbose() && $io->writeln('  Subscribers saved to <info>composer_subscribers.cache.php</info>');
+        $this->putDataToCacheFile('events_subscribers.cache.php', $bundles);
+        $io->isVerbose() && $io->writeln('  Subscribers saved to <info>events_subscribers.cache.php</info>');
     }
 
     /**
