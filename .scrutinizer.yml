@@ -1,0 +1,11 @@
+filter:
+  excluded_paths:
+    - 'app/*'
+    - 'tests/*'
+    - 'vendor/*'
+
+checks:
+  php: true
+
+tools:
+  external_code_coverage: true

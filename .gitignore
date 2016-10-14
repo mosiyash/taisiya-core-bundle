@@ -9,7 +9,13 @@ npm-debug.log
 !/app/config/settings.default.php
 /app/config/*.local.php
 /app/config/settings.php
+/build
+/coverage
 /pimple.json
 /phinx.*
+/phpunit.xml
 /propel.*
+/schema.*
+/var
+!/var/.placeholder
 /vendor
