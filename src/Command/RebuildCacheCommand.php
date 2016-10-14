@@ -14,13 +14,20 @@ use Taisiya\CoreBundle\Provider\ServiceProvider;
 
 class RebuildCacheCommand extends Command
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this->setName('cache:rebuild')
             ->setDescription('Rebuild internal application cache');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output):
     {
         $io = new TaisiyaStyle($input, $output);
 
