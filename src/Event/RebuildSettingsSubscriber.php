@@ -13,7 +13,7 @@ class RebuildSettingsSubscriber implements EventSubscriberInterface
     {
         return [
             CommandEvent::NAME => [
-                'onComposerCommandEvent',
+                ['rebuildSettings'],
             ],
         ];
     }
@@ -21,7 +21,8 @@ class RebuildSettingsSubscriber implements EventSubscriberInterface
     /**
      * @param CommandEvent $event
      */
-    public function onComposerCommandEvent(CommandEvent $event): void
+    public function rebuildSettings(CommandEvent $event): void
     {
+        var_dump($event);
     }
 }

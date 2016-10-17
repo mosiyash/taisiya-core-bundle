@@ -2,9 +2,9 @@
 
 namespace Taisiya\CoreBundle\Event\Composer\CommandEvent;
 
-use Taisiya\CoreBundle\Event\Event;
+use Taisiya\CoreBundle\Event\Composer\ComposerEvent;
 
-class PreAutoloadDumpEvent extends Event
+class PreAutoloadDumpEvent extends ComposerEvent
 {
     const NAME = 'composer.commands.pre_autoload_dump_event';
 }

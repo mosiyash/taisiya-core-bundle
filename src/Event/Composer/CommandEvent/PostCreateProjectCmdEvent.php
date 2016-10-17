@@ -2,9 +2,9 @@
 
 namespace Taisiya\CoreBundle\Event\Composer\CommandEvent;
 
-use Taisiya\CoreBundle\Event\Event;
+use Taisiya\CoreBundle\Event\Composer\ComposerEvent;
 
-class PostCreateProjectCmdEvent extends Event
+class PostCreateProjectCmdEvent extends ComposerEvent
 {
     const NAME = 'composer.commands.post_create_project_cmd_event';
 }

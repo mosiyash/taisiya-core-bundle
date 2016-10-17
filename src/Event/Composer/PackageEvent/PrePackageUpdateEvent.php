@@ -2,9 +2,9 @@
 
 namespace Taisiya\CoreBundle\Event\Composer\PackageEvent;
 
-use Taisiya\CoreBundle\Event\Event;
+use Taisiya\CoreBundle\Event\Composer\ComposerEvent;
 
-class PrePackageUpdateEvent extends Event
+class PrePackageUpdateEvent extends ComposerEvent
 {
     const NAME = 'composer.packages.pre_package_update_event';
 }

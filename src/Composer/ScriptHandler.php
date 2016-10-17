@@ -6,10 +6,10 @@ use Composer\EventDispatcher\Event;
 use Doctrine\Common\Inflector\Inflector;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Taisiya\CoreBundle\App;
+use Taisiya\CoreBundle\Event\Composer\CommandEvent;
 use Taisiya\CoreBundle\Event\Composer\InstallerEvent;
 use Taisiya\CoreBundle\Event\Composer\PackageEvent;
 use Taisiya\CoreBundle\Event\Composer\PluginEvent;
-use Taisiya\CoreBundle\Event\Composer\PluginEvent\CommandEvent;
 
 defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', dirname(dirname(__DIR__)));
 
@@ -28,6 +28,10 @@ class ScriptHandler
 
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $app->getContainer()['event_dispatcher'];
+
+        foreach (require_once TAISIYA_ROOT.'/var/cache/events_subscribers.cache.php' as $subscriberClass) {
+            $dispatcher->addSubscriber(new $subscriberClass());
+        }
 
         if (preg_match('/-cmd$/', $event->getName())) {
             $detailedEventClass = 'Taisiya\\CoreBundle\\Event\\Composer\\CommandEvent\\' . Inflector::classify($event->getName()) . 'Event';

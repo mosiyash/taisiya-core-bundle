@@ -2,9 +2,7 @@
 
 namespace Taisiya\CoreBundle\Event\Composer;
 
-use Taisiya\CoreBundle\Event\Event;
-
-class CommandEvent extends Event
+class CommandEvent extends ComposerEvent
 {
     const NAME = 'composer.command_event';
 }

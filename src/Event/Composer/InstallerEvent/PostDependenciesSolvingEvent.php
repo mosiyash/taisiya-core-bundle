@@ -2,9 +2,9 @@
 
 namespace Taisiya\CoreBundle\Event\Composer\InstallerEvent;
 
-use Taisiya\CoreBundle\Event\Event;
+use Taisiya\CoreBundle\Event\Composer\ComposerEvent;
 
-class PostDependenciesSolvingEvent extends Event
+class PostDependenciesSolvingEvent extends ComposerEvent
 {
     const NAME = 'composer.installer.post_dependencies_solving_event';
 }

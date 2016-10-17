@@ -2,9 +2,7 @@
 
 namespace Taisiya\CoreBundle\Event\Composer;
 
-use Taisiya\CoreBundle\Event\Event;
-
-class PackageEvent extends Event
+class PackageEvent extends ComposerEvent
 {
     const NAME = 'composer.package_event';
 }
