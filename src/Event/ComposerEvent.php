@@ -1,6 +1,6 @@
 <?php
 
-namespace Taisiya\CoreBundle\Event\Composer;
+namespace Taisiya\CoreBundle\Event;
 
 abstract class ComposerEvent extends \Symfony\Component\EventDispatcher\Event
 {

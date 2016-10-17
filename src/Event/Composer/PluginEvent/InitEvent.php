@@ -2,7 +2,7 @@
 
 namespace Taisiya\CoreBundle\Event\Composer\PluginEvent;
 
-use Taisiya\CoreBundle\Event\Composer\ComposerEvent;
+use Taisiya\CoreBundle\Event\ComposerEvent;
 
 class InitEvent extends ComposerEvent
 {
