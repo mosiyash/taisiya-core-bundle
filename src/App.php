@@ -5,9 +5,15 @@ namespace Taisiya\CoreBundle;
 use JBZoo\PimpleDumper\PimpleDumper;
 use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Taisiya\CoreBundle\Exception\RuntimeException;
 
 final class App extends \Slim\App
 {
+    /**
+     * @var Console
+     */
+    private $console;
+
     /**
      * {@inheritdoc}
      */
@@ -22,11 +28,27 @@ final class App extends \Slim\App
         if (class_exists(PimpleDumper::class)) {
             $this->getContainer()->register(new PimpleDumper());
         }
-
-        $this->connectBundles();
     }
 
-    final private function connectBundles(): void
+    /**
+     * @return Console
+     */
+    public function getConsole(): Console
     {
+        return $this->console;
+    }
+
+    /**
+     * @param Console $console
+     *
+     * @throws RuntimeException
+     */
+    public function setConsole(Console $console): void
+    {
+        if ($this->console) {
+            throw new RuntimeException('Console already sets');
+        }
+
+        $this->console = $console;
     }
 }

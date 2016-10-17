@@ -12,17 +12,19 @@ use Taisiya\CoreBundle\Exception\RuntimeException;
 
 final class RebuildSettingsCommand extends Command
 {
+    const NAME = 'config:rebuild-settings';
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('config:rebuild-settings')
+        $this->setName(self::NAME)
             ->setDescription('Rebuild project settings');
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -35,6 +37,7 @@ final class RebuildSettingsCommand extends Command
 
     /**
      * @param TaisiyaStyle $io
+     *
      * @throws RuntimeException
      */
     final protected function copySettings(TaisiyaStyle $io): void
@@ -51,7 +54,6 @@ final class RebuildSettingsCommand extends Command
             });
 
         foreach ($finder as $file) {
-            exit(var_dump($file->getPathname()));
             $dest = preg_replace('/^.+?\/vendor\/(.+?)\/(.+?)\/.+?$/', TAISIYA_ROOT.'/app/config/\1.\2.settings.default.php', $file->getPathname());
             if (!copy($file->getPathname(), $dest)) {
                 throw new RuntimeException('Couldn\'t copy '.str_replace(TAISIYA_ROOT.'/', '', $file->getPathname()).' to '.str_replace(TAISIYA_ROOT.'/', '', $dest));
@@ -63,6 +65,7 @@ final class RebuildSettingsCommand extends Command
 
     /**
      * @param TaisiyaStyle $io
+     *
      * @throws RuntimeException
      */
     final protected function mergeSettings(TaisiyaStyle $io): void

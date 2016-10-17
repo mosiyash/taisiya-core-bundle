@@ -15,6 +15,7 @@ abstract class ServiceProvider implements ServiceProviderInterface
 
     /**
      * CoreServiceProvider constructor.
+     *
      * @param App $app
      */
     public function __construct(App $app)

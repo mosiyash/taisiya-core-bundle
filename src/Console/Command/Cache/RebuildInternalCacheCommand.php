@@ -15,34 +15,34 @@ use Taisiya\CoreBundle\Provider\ServiceProvider;
 
 final class RebuildInternalCacheCommand extends Command
 {
+    const NAME = 'cache:rebuild-internal';
+
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('cache:rebuild-internal')
+        $this->setName(self::NAME)
             ->setDescription('Rebuild internal application cache');
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new TaisiyaStyle($input, $output);
-
-        $this->rebuildEventsSubscribersCache($io);
-        $this->rebuildBundlesCache($io);
-        $this->rebuildCommandsCache($io);
+        $this->rebuildEventsSubscribersCache($input, $output);
+        $this->rebuildBundlesCache($input, $output);
+        $this->rebuildCommandsCache($input, $output);
     }
 
     /**
      * @param TaisiyaStyle $io
      */
-    final protected function rebuildEventsSubscribersCache(TaisiyaStyle $io): void
+    final protected function rebuildEventsSubscribersCache(InputInterface $input, OutputInterface $output): void
     {
-        $io->isVerbose() && $io->writeln('Rebuild events subscribers cache');
+        $output->isVerbose() && $output->writeln('Rebuild events subscribers cache');
 
         $bundles = [];
 
@@ -54,23 +54,23 @@ final class RebuildInternalCacheCommand extends Command
 
         foreach ($finder as $k => $file) {
             $bundleServiceProvider = $this->extractClassNameFromFile($file->getPathname());
-            $reflectionClass = new \ReflectionClass($bundleServiceProvider);
+            $reflectionClass       = new \ReflectionClass($bundleServiceProvider);
             if (!$reflectionClass->isAbstract() && $reflectionClass->isSubclassOf(EventSubscriberInterface::class)) {
-                $io->isVerbose() && $io->writeln('  + '.$bundleServiceProvider);
+                $output->isVerbose() && $output->writeln('  + '.$bundleServiceProvider);
                 $bundles[] = $bundleServiceProvider;
             }
         }
 
         $this->putDataToCacheFile('events_subscribers.cache.php', $bundles);
-        $io->isVerbose() && $io->writeln('  Subscribers saved to <info>events_subscribers.cache.php</info>');
+        $output->isVerbose() && $output->writeln('  Subscribers saved to <info>events_subscribers.cache.php</info>');
     }
 
     /**
      * @param TaisiyaStyle $io
      */
-    final protected function rebuildBundlesCache(TaisiyaStyle $io): void
+    final protected function rebuildBundlesCache(InputInterface $input, OutputInterface $output): void
     {
-        $io->isVerbose() && $io->writeln('Rebuild bundles cache');
+        $output->isVerbose() && $output->writeln('Rebuild bundles cache');
 
         $bundles = [];
 
@@ -82,23 +82,23 @@ final class RebuildInternalCacheCommand extends Command
 
         foreach ($finder as $k => $file) {
             $bundleServiceProvider = $this->extractClassNameFromFile($file->getPathname());
-            $reflectionClass = new \ReflectionClass($bundleServiceProvider);
+            $reflectionClass       = new \ReflectionClass($bundleServiceProvider);
             if (!$reflectionClass->isAbstract() && $reflectionClass->isSubclassOf(ServiceProvider::class)) {
-                $io->isVerbose() && $io->writeln('  + '.$bundleServiceProvider);
+                $output->isVerbose() && $output->writeln('  + '.$bundleServiceProvider);
                 $bundles[] = $bundleServiceProvider;
             }
         }
 
         $this->putDataToCacheFile('bundles.cache.php', $bundles);
-        $io->isVerbose() && $io->writeln('  Bundles saved to <info>bundles.cache.php</info>');
+        $output->isVerbose() && $output->writeln('  Bundles saved to <info>bundles.cache.php</info>');
     }
 
     /**
      * @param TaisiyaStyle $io
      */
-    final protected function rebuildCommandsCache(TaisiyaStyle $io): void
+    final protected function rebuildCommandsCache(InputInterface $input, OutputInterface $output): void
     {
-        $io->isVerbose() && $io->writeln('Rebuild commands cache');
+        $output->isVerbose() && $output->writeln('Rebuild commands cache');
 
         $commands = [];
 
@@ -116,18 +116,20 @@ final class RebuildInternalCacheCommand extends Command
                 continue;
             }
             if (!$reflectionClass->isAbstract() && $reflectionClass->isSubclassOf(Command::class)) {
-                $io->isVerbose() && $io->writeln('  + '.$commandClass);
+                $output->isVerbose() && $output->writeln('  + '.$commandClass);
                 $commands[] = $commandClass;
             }
         }
 
         $this->putDataToCacheFile('commands.cache.php', $commands);
-        $io->isVerbose() && $io->writeln('  Commands saved to <info>commands.cache.php</info>');
+        $output->isVerbose() && $output->writeln('  Commands saved to <info>commands.cache.php</info>');
     }
 
     /**
      * @param string $filepath
+     *
      * @throws RuntimeException
+     *
      * @return string
      */
     final protected function extractClassNameFromFile(string $filepath): string
@@ -152,9 +154,11 @@ final class RebuildInternalCacheCommand extends Command
 
     /**
      * @param string $filepath
+     *
      * @throws InvalidArgumentException
      * @throws NotReadableException
      * @throws RuntimeException
+     *
      * @return string
      */
     final protected function getFileContents(string $filepath): string
@@ -178,7 +182,8 @@ final class RebuildInternalCacheCommand extends Command
 
     /**
      * @param string $filename
-     * @param array $data
+     * @param array  $data
+     *
      * @throws RuntimeException
      */
     final protected function putDataToCacheFile(string $filename, array $data): void

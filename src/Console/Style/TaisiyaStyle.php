@@ -10,9 +10,10 @@ class TaisiyaStyle extends SymfonyStyle
      * Outputs a replacable line to the cli.
      * You can continue replacing the line until TRUE is passed as the second parameter
      * in order to indicate you are done modifying the line.
+     *
      * @param $messages
      * @param bool $endline Whether the line is done being replaced
-     * @param int $type
+     * @param int  $type
      */
     public function writeReplace($messages, bool $endline = false, int $type = self::OUTPUT_NORMAL): void
     {
