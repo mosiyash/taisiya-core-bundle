@@ -188,7 +188,7 @@ final class RebuildInternalCacheCommand extends Command
      */
     final protected function putDataToCacheFile(string $filename, array $data): void
     {
-        $cacheDir = TAISIYA_ROOT.'/var/cache';
+        $cacheDir = TAISIYA_ROOT.'/var/cache/internal';
         if (!file_exists($cacheDir)) {
             if (!mkdir($cacheDir, 0777, true)) {
                 throw new RuntimeException('Couldn\'t create directory '.$cacheDir);

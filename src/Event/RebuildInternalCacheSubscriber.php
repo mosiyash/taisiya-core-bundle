@@ -2,12 +2,12 @@
 
 namespace Taisiya\CoreBundle\Event;
 
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\ArrayInput;
-use Taisiya\CoreBundle\Console\Command\Config\RebuildSettingsCommand;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Taisiya\CoreBundle\Console\Command\Cache\RebuildInternalCacheCommand;
 use Taisiya\CoreBundle\Event\Composer\CommandEvent;
 
-class RebuildSettingsSubscriber implements EventSubscriberInterface
+class RebuildInternalCacheSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -16,7 +16,7 @@ class RebuildSettingsSubscriber implements EventSubscriberInterface
     {
         return [
             CommandEvent::NAME => [
-                ['rebuildSettings', -900],
+                ['rebuildInternalCache', -1000],
             ],
         ];
     }
@@ -24,19 +24,19 @@ class RebuildSettingsSubscriber implements EventSubscriberInterface
     /**
      * @param CommandEvent $event
      */
-    public function rebuildSettings(CommandEvent $event): void
+    public function rebuildInternalCache(CommandEvent $event): void
     {
-        /** @var OutputFormatter $output */
+        /** @var ConsoleOutput $output */
         $output = $event->getApp()->getContainer()['console.output'];
 
         if ($output->isVerbose()) {
-            $str = 'Run '.RebuildSettingsCommand::NAME.' command';
+            $str = 'Run '.RebuildInternalCacheCommand::NAME.' command';
             $output->writeln('');
             $output->writeln($str);
             $output->writeln(str_repeat('-', strlen($str)));
         }
 
-        $input = new ArrayInput([RebuildSettingsCommand::NAME]);
+        $input = new ArrayInput([RebuildInternalCacheCommand::NAME]);
         $event->getApp()->getConsole()->doRun($input, $output);
     }
 }

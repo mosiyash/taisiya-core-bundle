@@ -29,7 +29,7 @@ class ScriptHandler
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $app->getContainer()['event_dispatcher'];
 
-        foreach (require_once TAISIYA_ROOT.'/var/cache/events_subscribers.cache.php' as $subscriberClass) {
+        foreach (require_once TAISIYA_ROOT.'/var/cache/internal/events_subscribers.cache.php' as $subscriberClass) {
             $dispatcher->addSubscriber(new $subscriberClass());
         }
 
