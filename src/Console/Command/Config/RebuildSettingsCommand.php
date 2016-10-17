@@ -50,7 +50,8 @@ final class RebuildSettingsCommand extends Command
                 return (bool) preg_match('/\/app\/config\//', $file->getPathname());
             });
 
-        foreach ($finder as $file) {exit(var_dump($file->getPathname()));
+        foreach ($finder as $file) {
+            exit(var_dump($file->getPathname()));
             $dest = preg_replace('/^.+?\/vendor\/(.+?)\/(.+?)\/.+?$/', TAISIYA_ROOT.'/app/config/\1.\2.settings.default.php', $file->getPathname());
             if (!copy($file->getPathname(), $dest)) {
                 throw new RuntimeException('Couldn\'t copy '.str_replace(TAISIYA_ROOT.'/', '', $file->getPathname()).' to '.str_replace(TAISIYA_ROOT.'/', '', $dest));

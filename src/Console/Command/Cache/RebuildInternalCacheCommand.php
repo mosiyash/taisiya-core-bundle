@@ -13,7 +13,7 @@ use Taisiya\CoreBundle\Exception\NotReadableException;
 use Taisiya\CoreBundle\Exception\RuntimeException;
 use Taisiya\CoreBundle\Provider\ServiceProvider;
 
-final class RebuildInternalCommand extends Command
+final class RebuildInternalCacheCommand extends Command
 {
     /**
      * {@inheritdoc}

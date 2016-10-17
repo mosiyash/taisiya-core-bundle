@@ -5,8 +5,6 @@ namespace Taisiya\CoreBundle\Composer;
 use Composer\EventDispatcher\Event;
 use Doctrine\Common\Inflector\Inflector;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Taisiya\CoreBundle\App;
 use Taisiya\CoreBundle\Event\Composer\CommandEvent;
 use Taisiya\CoreBundle\Event\Composer\InstallerEvent;
@@ -31,8 +29,8 @@ class ScriptHandler
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $app->getContainer()['event_dispatcher'];
 
-        $eventClass = 'Taisiya\\CoreBundle\\Event\\Composer\\'.Inflector::classify($event->getName()).'Event';
-        $detailedEvent = new $eventClass();
+        $detailedEventClass = 'Taisiya\\CoreBundle\\Event\\Composer\\'.Inflector::classify($event->getName()).'Event';
+        $detailedEvent = new $detailedEventClass();
         $dispatcher->dispatch($detailedEvent::NAME, $detailedEvent);
 
         if (preg_match('/-cmd$/', $event->getName())) {

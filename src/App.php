@@ -15,7 +15,7 @@ final class App extends \Slim\App
     {
         parent::__construct($container);
 
-        $this->getContainer()['event_dispatcher'] = function(Container $pimple) {
+        $this->getContainer()['event_dispatcher'] = function (Container $pimple) {
             return new EventDispatcher();
         };
 

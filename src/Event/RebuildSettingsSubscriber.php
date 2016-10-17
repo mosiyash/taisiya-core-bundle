@@ -23,6 +23,5 @@ class RebuildSettingsSubscriber implements EventSubscriberInterface
      */
     public function onComposerCommandEvent(CommandEvent $event): void
     {
-
     }
 }
