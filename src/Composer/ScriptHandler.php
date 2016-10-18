@@ -2,6 +2,7 @@
 
 namespace Taisiya\CoreBundle\Composer;
 
+use Composer\Composer;
 use Composer\EventDispatcher\Event;
 use Doctrine\Common\Inflector\Inflector;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -11,25 +12,37 @@ use Taisiya\CoreBundle\Event\Composer\InstallerEvent;
 use Taisiya\CoreBundle\Event\Composer\PackageEvent;
 use Taisiya\CoreBundle\Event\Composer\PluginEvent;
 
-defined('TAISIYA_ROOT') || define('TAISIYA_ROOT', dirname(dirname(__DIR__)));
-
 class ScriptHandler
 {
-    const EVENT_EXECUTE = 'composer.handler.execute';
+    /**
+     * @param Composer $composer
+     *
+     * @return string
+     */
+    final protected static function getRootDir(Composer $composer): string
+    {
+        if (!defined('TAISIYA_ROOT')) {
+            define('TAISIYA_ROOT', dirname($composer->getConfig()->get('vendor-dir')));
+        }
+
+        return TAISIYA_ROOT;
+    }
 
     /**
      * @param Event $event
      */
     final public static function runEvents(Event $event): void
     {
-        $app = file_exists(TAISIYA_ROOT.'/bootstrap.php')
-            ? require_once TAISIYA_ROOT.'/bootstrap.php' :
-            new App(['settings' => require_once TAISIYA_ROOT.'/app/config/settings.php']);
+        $rootDir = self::getRootDir($event->getComposer());
+
+        $app = file_exists($rootDir.'/bootstrap.php')
+            ? require_once $rootDir.'/bootstrap.php' :
+            new App(['settings' => require_once $rootDir.'/app/config/settings.php']);
 
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $app->getContainer()['event_dispatcher'];
 
-        foreach (require_once TAISIYA_ROOT.'/var/cache/internal/events_subscribers.cache.php' as $subscriberClass) {
+        foreach (require_once $rootDir.'/var/cache/internal/events_subscribers.cache.php' as $subscriberClass) {
             $dispatcher->addSubscriber(new $subscriberClass());
         }
 
