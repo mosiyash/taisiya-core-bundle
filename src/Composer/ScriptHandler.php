@@ -20,7 +20,7 @@ class ScriptHandler
     /**
      * @param Event $event
      */
-    final public static function runCommandEvents(Event $event): void
+    final public static function runEvents(Event $event): void
     {
         $app = file_exists(TAISIYA_ROOT.'/bootstrap.php')
             ? require_once TAISIYA_ROOT.'/bootstrap.php' :

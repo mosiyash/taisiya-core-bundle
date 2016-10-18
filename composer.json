@@ -34,10 +34,10 @@
   },
   "scripts": {
     "post-install-cmd": [
-      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::runCommandEvents"
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::runEvents"
     ],
     "post-update-cmd": [
-      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::runCommandEvents"
+      "Taisiya\\CoreBundle\\Composer\\ScriptHandler::runEvents"
     ]
   }
 }
