@@ -119,7 +119,6 @@ final class RebuildInternalCacheCommand extends Command
                 $output->isVerbose() && $output->writeln('  + '.$commandClass);
                 $commands[] = $commandClass;
             }
-
         }
 
         $this->putDataToCacheFile('commands.cache.php', $commands);
