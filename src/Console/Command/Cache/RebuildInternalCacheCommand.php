@@ -2,6 +2,10 @@
 
 namespace Taisiya\CoreBundle\Console\Command\Cache;
 
+use PhpParser\Builder\Class_;
+use PhpParser\Node;
+use PhpParser\Parser;
+use PhpParser\ParserFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
@@ -109,6 +113,7 @@ final class RebuildInternalCacheCommand extends Command
             ->name('*Command.php');
 
         foreach ($finder as $k => $file) {
+            $output->writeln($file->getPathname());
             $commandClass = $this->extractClassNameFromFile($file->getPathname());
             try {
                 $reflectionClass = new \ReflectionClass($commandClass);
@@ -119,6 +124,13 @@ final class RebuildInternalCacheCommand extends Command
                 $output->isVerbose() && $output->writeln('  + '.$commandClass);
                 $commands[] = $commandClass;
             }
+//            $stmts = $this->getParser()->parse($this->getFileContents($file->getPathname()));
+//            if (!$this->isAbstractClass($stmts) && $this->isSubclassOf($stmts, Command::class)) {
+//                $commandClass = $this->findClassNameInStmts($stmts);
+//                $output->isVerbose() && $output->writeln('  + '.$commandClass);
+//                $commands[] = $commandClass;
+//            }
+
         }
 
         $this->putDataToCacheFile('commands.cache.php', $commands);
@@ -197,5 +209,90 @@ final class RebuildInternalCacheCommand extends Command
         if (!file_put_contents($cacheDir.'/'.$filename, "<?php\n\nreturn ".var_export($data, true).";\n")) {
             throw new RuntimeException('Couldn\'t write contents to file '.$cacheDir.'/'.$filename);
         }
+    }
+
+    /**
+     * @return Parser
+     */
+    final protected function getParser(): Parser
+    {
+        return (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+    }
+
+    /**
+     * @param array|null $stmts
+     * @return null|string
+     */
+    final private function findClassNameInStmts(array $stmts = null): ?string
+    {
+        $namespace = null;
+        $class = null;
+
+        /** @var Node\Stmt $stmt */
+        foreach ($stmts as $stmt) {
+            if ($stmt instanceof Node\Stmt\Namespace_) {
+                $namespace = $stmt->name->toString();
+            } elseif ($stmt instanceof Node\Stmt\Class_) {
+                $class = $stmt->name;
+            }
+            if ($namespace && $class) {
+                break;
+            }
+        }
+
+        if ($namespace && $class) {
+            return $namespace.'\\'.$class;
+        } elseif ($class) {
+            return $class;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array|null $stmts
+     * @return bool
+     */
+    final private function isAbstractClass(array $stmts = null): bool
+    {
+        if ($stmts) {
+            /** @var Node\Stmt $stmt */
+            foreach ($stmts as $stmt) {
+                if ($stmt instanceof Node\Stmt\Class_ && $stmt->isAbstract()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param array|null $stmts
+     * @param string $subClassName
+     * @return bool
+     */
+    final private function isSubclassOf(array $stmts = null, string $subClassName): bool
+    {
+        if ($stmts) {
+            $use = null;
+            $useAlias = null;
+            $extendedClassName = null;
+            /** @var Node\Stmt $stmt */
+            foreach ($stmts as $stmt) {
+                if ($stmt instanceof Node\Stmt\Use_ && $stmt->uses[0]->name->toString() === $subClassName) {
+                    $use = $stmt->uses[0]->name->toString();
+                    $useAlias = $stmt->uses[0]->alias;
+                } elseif ($stmt instanceof Node\Stmt\Class_) {
+                    if ($stmt->extends) {
+                        $extendedClassName = $stmt->extends->toString();
+                    }
+                }
+            }
+            if ($use && $extendedClassName && $useAlias === $extendedClassName) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 }
